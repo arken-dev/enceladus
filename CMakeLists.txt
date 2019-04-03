@@ -20,4 +20,4 @@ add_executable(
     ${src}
 )
 
-target_link_libraries( miranda lua charon )
+target_link_libraries( enceladus lua charon )
