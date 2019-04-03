@@ -13,6 +13,16 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${PROJECT_SOURCE_DIR}/deps/include)
 include_directories(${PROJECT_SOURCE_DIR}/src/lua/json)
 
+set(CXX_FLAGS
+    -g
+    -Wall
+    -std=c++11
+    -D_PTHREADS
+    -Wno-unused-parameter
+    -O2
+    -finline-functions
+)
+
 file(GLOB src src1/*.cpp)
 
 add_executable(
