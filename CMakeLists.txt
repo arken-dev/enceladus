@@ -23,7 +23,7 @@ set(CXX_FLAGS
     -finline-functions
 )
 
-file(GLOB src src2/*.cpp)
+file(GLOB src src3/*.cpp)
 
 add_executable(
     enceladus
