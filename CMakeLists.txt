@@ -23,14 +23,14 @@ set(CXX_FLAGS
     -finline-functions
 )
 
-file(GLOB src src1/*.cpp)
+file(GLOB src src2/*.cpp)
 
 add_executable(
     enceladus
     ${src}
 )
 
-find_package(Boost COMPONENTS system)
+find_package(Boost COMPONENTS system thread)
 find_package(Threads REQUIRED)
 find_package(Qt5Core)
 find_package(Qt5Network)
