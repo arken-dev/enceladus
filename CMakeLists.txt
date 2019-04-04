@@ -17,13 +17,11 @@ set(CXX_FLAGS
     -g
     -Wall
     -std=c++11
-    -D_PTHREADS
-    -Wno-unused-parameter
     -O2
     -finline-functions
 )
 
-file(GLOB src src4/*.cpp)
+file(GLOB src src1/*.cpp)
 
 add_executable(
     enceladus
@@ -40,6 +38,6 @@ find_package(Qt5Network)
 # if using boost
 SET(Boost_USE_MULTITHREADED ON)
 
-target_link_libraries( enceladus lua charon )
+target_link_libraries( enceladus lua charon curl json )
 target_link_libraries( enceladus Qt5::Core Qt5::Network )
 TARGET_LINK_LIBRARIES( enceladus pthread m ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})
