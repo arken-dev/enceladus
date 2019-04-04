@@ -30,4 +30,15 @@ add_executable(
     ${src}
 )
 
+find_package(Boost)
+find_package(Threads REQUIRED)
+find_package(Qt5Core)
+find_package(Qt5Network)
+
+
+
+# if using boost
+SET(Boost_USE_MULTITHREADED ON)
+
 target_link_libraries( enceladus lua charon )
+target_link_libraries( enceladus Qt5::Core Qt5::Network )
