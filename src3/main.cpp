@@ -14,9 +14,13 @@
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
 #include "server.hpp"
+#include <charon/base>
+
+using charon::mvm;
 
 int main(int argc, char* argv[])
 {
+  mvm::init(argc, argv);
   try
   {
     // Check command line arguments.

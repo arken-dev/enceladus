@@ -12,6 +12,10 @@
 #include <vector>
 #include <boost/bind.hpp>
 #include "request_handler.hpp"
+#include <charon/base>
+
+using charon::net::HttpHandle;
+
 
 namespace http {
 namespace server2 {
@@ -41,6 +45,7 @@ void connection::handle_read(const boost::system::error_code& e,
 {
   if (!e)
   {
+    /*
     boost::tribool result;
     boost::tie(result, boost::tuples::ignore) = request_parser_.parse(
         request_, buffer_.data(), buffer_.data() + bytes_transferred);
@@ -48,9 +53,12 @@ void connection::handle_read(const boost::system::error_code& e,
     if (result)
     {
       request_handler_.handle_request(request_, reply_);
-      boost::asio::async_write(socket_, reply_.to_buffers(),
+      */
+      std::string result = HttpHandle::sync(buffer_.data(), bytes_transferred);
+      boost::asio::async_write(socket_, boost::asio::buffer(result),
           boost::bind(&connection::handle_write, shared_from_this(),
             boost::asio::placeholders::error));
+    /*
     }
     else if (!result)
     {
@@ -66,6 +74,7 @@ void connection::handle_read(const boost::system::error_code& e,
             boost::asio::placeholders::error,
             boost::asio::placeholders::bytes_transferred));
     }
+    */
   }
 
   // If an error occurs then no new asynchronous operations are started. This

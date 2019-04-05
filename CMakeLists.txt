@@ -13,6 +13,8 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${PROJECT_SOURCE_DIR}/deps/include)
 include_directories(${PROJECT_SOURCE_DIR}/src/lua/json)
 
+link_directories( ${PROJECT_SOURCE_DIR}/deps )
+
 set(CXX_FLAGS
     -g
     -Wall
@@ -21,7 +23,35 @@ set(CXX_FLAGS
     -finline-functions
 )
 
-file(GLOB src src1/*.cpp)
+set(ENCELADUS_MODEL "" CACHE STRING
+  "enceladus concurrency model")
+
+set_property(
+  CACHE ENCELADUS_MODEL PROPERTY STRINGS
+  "" model-1 model-2 model-3
+)
+
+
+if(ENCELADUS_MODEL STREQUAL "")
+  set(ENCELADUS_MODEL "model-3")
+endif()
+
+message("ENCELADUS CONCURRENCY MODEL.....: ${ENCELADUS_MODEL}")
+
+if(ENCELADUS_MODEL STREQUAL "model-1")
+  set(ENCELADUS_MODEL "src1")
+endif()
+
+if(ENCELADUS_MODEL STREQUAL "model-2")
+  set(ENCELADUS_MODEL "src2")
+endif()
+
+if(ENCELADUS_MODEL STREQUAL "model-3")
+  set(ENCELADUS_MODEL "src3")
+endif()
+
+
+file(GLOB src ${ENCELADUS_MODEL}/*.cpp)
 
 add_executable(
     enceladus
@@ -32,8 +62,6 @@ find_package(Boost COMPONENTS system thread)
 find_package(Threads REQUIRED)
 find_package(Qt5Core)
 find_package(Qt5Network)
-
-
 
 # if using boost
 SET(Boost_USE_MULTITHREADED ON)

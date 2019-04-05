@@ -13,6 +13,9 @@
 #include <boost/bind.hpp>
 #include "connection_manager.hpp"
 #include "request_handler.hpp"
+#include <charon/base>
+
+using charon::net::HttpHandle;
 
 namespace http {
 namespace server {
@@ -48,6 +51,8 @@ void connection::handle_read(const boost::system::error_code& e,
 {
   if (!e)
   {
+
+    /*
     boost::tribool result;
     boost::tie(result, boost::tuples::ignore) = request_parser_.parse(
         request_, buffer_.data(), buffer_.data() + bytes_transferred);
@@ -55,9 +60,19 @@ void connection::handle_read(const boost::system::error_code& e,
     if (result)
     {
       request_handler_.handle_request(request_, reply_);
-      boost::asio::async_write(socket_, reply_.to_buffers(),
+*/
+
+      std::string result = HttpHandle::sync(buffer_.data(), bytes_transferred);
+      boost::asio::async_write(socket_, boost::asio::buffer(result),
           boost::bind(&connection::handle_write, shared_from_this(),
             boost::asio::placeholders::error));
+      /*
+      charon::string str = os::read("/tmp/request.txt");
+      boost::asio::async_write(socket_, boost::asio::buffer(str.data(), str.size()),
+          boost::bind(&connection::handle_write, shared_from_this(),
+            boost::asio::placeholders::error));
+    */
+    /*
     }
     else if (!result)
     {
@@ -73,6 +88,7 @@ void connection::handle_read(const boost::system::error_code& e,
             boost::asio::placeholders::error,
             boost::asio::placeholders::bytes_transferred));
     }
+    */
   }
   else if (e != boost::asio::error::operation_aborted)
   {
