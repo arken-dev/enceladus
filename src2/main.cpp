@@ -43,12 +43,10 @@ int main(int argc, char* argv[])
     //http::server2::server s(argv[1], argv[2], argv[4], num_threads);
 
     Config c("config/enceladus.json");
-    std::cout << "enceladus start ";
-    std::cout << " address " << c.address();
-    std::cout << " port "    << c.port();
-    std::cout << " threads " << c.threads();
-    std::cout << std::endl;
-    http::server2::server s(c.address(), c.port(), "/", c.threads());
+    std::cout << "start enceladus " << c.address() << ":" << c.port() <<
+      " (" << c.threads() << ") threads..." << std::endl;
+
+    http::server2::server s(c.address(), std::to_string(c.port()), "public", c.threads());
 
     // Run the server until stopped.
     s.run();
