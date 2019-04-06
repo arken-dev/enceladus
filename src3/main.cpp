@@ -16,7 +16,8 @@
 #include "server.hpp"
 #include <charon/base>
 
-using charon::mvm;
+using mvm    = charon::mvm;
+using Config = charon::net::Config;
 
 int main(int argc, char* argv[])
 {
@@ -24,6 +25,7 @@ int main(int argc, char* argv[])
   try
   {
     // Check command line arguments.
+    /*
     if (argc != 5)
     {
       std::cerr << "Usage: http_server <address> <port> <threads> <doc_root>\n";
@@ -33,10 +35,14 @@ int main(int argc, char* argv[])
       std::cerr << "    receiver 0::0 80 1 .\n";
       return 1;
     }
+    */
 
     // Initialise the server.
-    std::size_t num_threads = boost::lexical_cast<std::size_t>(argv[3]);
-    http::server3::server s(argv[1], argv[2], argv[4], num_threads);
+    Config c("config/enceladus.json");
+    std::cout << "start enceladus " << c.address() << ":" << c.port() <<
+      " (" << c.threads() << ") threads..." << std::endl;
+
+    http::server3::server s(c.address(), std::to_string(c.port()), "public", c.threads());
 
     // Run the server until stopped.
     s.run();
