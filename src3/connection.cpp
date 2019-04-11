@@ -26,8 +26,8 @@ connection::connection(boost::asio::io_service& io_service,
   : strand_(io_service),
     socket_(io_service),
     deadline_(io_service),
-    request_handler_(handler),
-    microtime(0)
+    microtime(0),
+    request_handler_(handler)
 {
 }
 
@@ -45,7 +45,7 @@ void connection::start()
           boost::asio::placeholders::bytes_transferred)));
 }
 
-void connection::action(const boost::system::error_code& e)
+void connection::handle_largefile(const boost::system::error_code& e)
 {
   if( (os::microtime() - microtime) > 1 ) {
     std::string result = HttpHandle::sync(data_.c_str(), data_.size());
@@ -71,14 +71,13 @@ void connection::handle_read(const boost::system::error_code& e,
       microtime = os::microtime();
       deadline_.cancel();
       deadline_.expires_from_now( boost::posix_time::seconds( 1 ));
-      deadline_.async_wait( boost::bind( &connection::action, this, boost::asio::placeholders::error));
+      deadline_.async_wait( boost::bind( &connection::handle_largefile, this, boost::asio::placeholders::error));
       socket_.async_read_some(boost::asio::buffer(buffer_),
           strand_.wrap(
             boost::bind(&connection::handle_read, shared_from_this(),
               boost::asio::placeholders::error,
               boost::asio::placeholders::bytes_transferred)));
     }
-
     /*
     boost::tribool result;
     boost::tie(result, boost::tuples::ignore) = request_parser_.parse(
@@ -113,7 +112,14 @@ void connection::handle_read(const boost::system::error_code& e,
     }
 
   */
+  } else {
+      reply_ = reply::stock_reply(reply::bad_request);
+      boost::asio::async_write(socket_, reply_.to_buffers(),
+          strand_.wrap(
+            boost::bind(&connection::handle_write, shared_from_this(),
+              boost::asio::placeholders::error)));
   }
+
 
   // If an error occurs then no new asynchronous operations are started. This
   // means that all shared_ptr references to the connection object will

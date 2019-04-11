@@ -42,7 +42,7 @@ public:
   void start();
 
 private:
-  void action(const boost::system::error_code& e);
+  void handle_largefile(const boost::system::error_code& e);
 
   /// Handle completion of a read operation.
   void handle_read(const boost::system::error_code& e,
@@ -57,7 +57,11 @@ private:
   /// Socket for the connection.
   boost::asio::ip::tcp::socket socket_;
 
+  /// Deadline timer for large upload files
   boost::asio::deadline_timer deadline_;
+
+  // microtime controller using with deadline timer
+  double microtime;
 
   /// The handler used to process the incoming request.
   request_handler& request_handler_;
@@ -65,12 +69,11 @@ private:
   /// Buffer for incoming data.
   boost::array<char, 4096> buffer_;
 
+  /// append data for upload large files
   std::string data_;
 
   /// The incoming request.
   request request_;
-
-  double microtime;
 
   /// The parser for the incoming request.
   request_parser request_parser_;
