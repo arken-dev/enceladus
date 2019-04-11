@@ -7,6 +7,7 @@
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+// https://stackoverflow.com/questions/11878091/delayed-action-using-boostdeadline-timer
 
 #include "connection.hpp"
 #include <vector>
@@ -24,7 +25,9 @@ connection::connection(boost::asio::io_service& io_service,
     request_handler& handler)
   : strand_(io_service),
     socket_(io_service),
-    request_handler_(handler)
+    deadline_(io_service),
+    request_handler_(handler),
+    microtime(0)
 {
 }
 
@@ -42,11 +45,40 @@ void connection::start()
           boost::asio::placeholders::bytes_transferred)));
 }
 
+void connection::action(const boost::system::error_code& e)
+{
+  if( (os::microtime() - microtime) > 1 ) {
+    std::string result = HttpHandle::sync(data_.c_str(), data_.size());
+    boost::asio::async_write(socket_, boost::asio::buffer(result),
+        boost::bind(&connection::handle_write, shared_from_this(),
+          boost::asio::placeholders::error));
+  }
+}
+
 void connection::handle_read(const boost::system::error_code& e,
     std::size_t bytes_transferred)
 {
+
   if (!e)
   {
+    if( microtime == 0 && bytes_transferred < 4096 ) {
+      std::string result = HttpHandle::sync(buffer_.data(), bytes_transferred);
+      boost::asio::async_write(socket_, boost::asio::buffer(result),
+          boost::bind(&connection::handle_write, shared_from_this(),
+            boost::asio::placeholders::error));
+    } else {
+      data_.append(buffer_.data(), bytes_transferred);
+      microtime = os::microtime();
+      deadline_.cancel();
+      deadline_.expires_from_now( boost::posix_time::seconds( 1 ));
+      deadline_.async_wait( boost::bind( &connection::action, this, boost::asio::placeholders::error));
+      socket_.async_read_some(boost::asio::buffer(buffer_),
+          strand_.wrap(
+            boost::bind(&connection::handle_read, shared_from_this(),
+              boost::asio::placeholders::error,
+              boost::asio::placeholders::bytes_transferred)));
+    }
+
     /*
     boost::tribool result;
     boost::tie(result, boost::tuples::ignore) = request_parser_.parse(
@@ -54,14 +86,13 @@ void connection::handle_read(const boost::system::error_code& e,
 
     if (result)
     {
-      request_handler_.handle_request(request_, reply_);
-
-    */
+      //request_handler_.handle_request(request_, reply_);
+      std::cout << buffer_.data() << std::endl;
+      std::cout << "processado requisicao bytes_transferred " << bytes_transferred << std::endl;
       std::string result = HttpHandle::sync(buffer_.data(), bytes_transferred);
       boost::asio::async_write(socket_, boost::asio::buffer(result),
           boost::bind(&connection::handle_write, shared_from_this(),
             boost::asio::placeholders::error));
-    /*
     }
     else if (!result)
     {
@@ -73,13 +104,15 @@ void connection::handle_read(const boost::system::error_code& e,
     }
     else
     {
+      std::cout << "aqui indefinido " << bytes_transferred << std::endl;
       socket_.async_read_some(boost::asio::buffer(buffer_),
           strand_.wrap(
             boost::bind(&connection::handle_read, shared_from_this(),
               boost::asio::placeholders::error,
               boost::asio::placeholders::bytes_transferred)));
     }
-    */
+
+  */
   }
 
   // If an error occurs then no new asynchronous operations are started. This

@@ -16,6 +16,7 @@
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/asio/deadline_timer.hpp>
 #include "reply.hpp"
 #include "request.hpp"
 #include "request_handler.hpp"
@@ -41,6 +42,8 @@ public:
   void start();
 
 private:
+  void action(const boost::system::error_code& e);
+
   /// Handle completion of a read operation.
   void handle_read(const boost::system::error_code& e,
       std::size_t bytes_transferred);
@@ -54,14 +57,20 @@ private:
   /// Socket for the connection.
   boost::asio::ip::tcp::socket socket_;
 
+  boost::asio::deadline_timer deadline_;
+
   /// The handler used to process the incoming request.
   request_handler& request_handler_;
 
   /// Buffer for incoming data.
-  boost::array<char, 8192> buffer_;
+  boost::array<char, 4096> buffer_;
+
+  std::string data_;
 
   /// The incoming request.
   request request_;
+
+  double microtime;
 
   /// The parser for the incoming request.
   request_parser request_parser_;
