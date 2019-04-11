@@ -2,6 +2,17 @@
 
 Web server async multithreading based on boost api.
 
+## MODEL
+Enceladus is base in boost examples: https://www.boost.org/doc/libs/1_63_0/doc/html/boost_asio/examples.html
+
+- model 1 
+This example illustrates the use of asio in a simple single-threaded server implementation of HTTP 1.0. It demonstrates how to perform a clean shutdown by cancelling all outstanding asynchronous operations.
+
+- model 2
+An HTTP server using an io_service-per-CPU design.
+
+- model 3
+An HTTP server using a single io_service and a thread pool calling io_service::run().
 
 ## BUILD
 
