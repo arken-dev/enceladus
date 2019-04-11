@@ -9,10 +9,10 @@ Enceladus is base in boost examples: https://www.boost.org/doc/libs/1_63_0/doc/h
 An HTTP server using an asio in a simple single-threaded server.
 
 - model 2
-An HTTP server using an io_service-per-CPU design.
+An HTTP server using an io_service-per-CPU design. (Many threads is better)
 
 - model 3
-An HTTP server using a single io_service and a thread pool calling io_service::run().
+An HTTP server using a single io_service and a thread pool calling io_service::run(). (One Thread per cpu is better)
 
 ## BUILD
 
