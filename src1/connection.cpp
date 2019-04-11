@@ -24,6 +24,8 @@ connection::connection(boost::asio::io_service& io_service,
     connection_manager& manager, request_handler& handler)
   : socket_(io_service),
     connection_manager_(manager),
+    deadline_(io_service),
+    microtime(0),
     request_handler_(handler)
 {
 }
@@ -39,6 +41,16 @@ void connection::start()
       boost::bind(&connection::handle_read, shared_from_this(),
         boost::asio::placeholders::error,
         boost::asio::placeholders::bytes_transferred));
+}
+
+void connection::handle_largefile(const boost::system::error_code& e)
+{
+  if( (os::microtime() - microtime) > 1 ) {
+    std::string result = HttpHandle::sync(data_.c_str(), data_.size());
+    boost::asio::async_write(socket_, boost::asio::buffer(result),
+        boost::bind(&connection::handle_write, shared_from_this(),
+          boost::asio::placeholders::error));
+  }
 }
 
 void connection::stop()
@@ -61,17 +73,22 @@ void connection::handle_read(const boost::system::error_code& e,
     {
       request_handler_.handle_request(request_, reply_);
 */
-
+    if( microtime == 0 && bytes_transferred < 4096 ) {
       std::string result = HttpHandle::sync(buffer_.data(), bytes_transferred);
       boost::asio::async_write(socket_, boost::asio::buffer(result),
           boost::bind(&connection::handle_write, shared_from_this(),
             boost::asio::placeholders::error));
-      /*
-      charon::string str = os::read("/tmp/request.txt");
-      boost::asio::async_write(socket_, boost::asio::buffer(str.data(), str.size()),
-          boost::bind(&connection::handle_write, shared_from_this(),
-            boost::asio::placeholders::error));
-    */
+    } else {
+      data_.append(buffer_.data(), bytes_transferred);
+      microtime = os::microtime();
+      deadline_.cancel();
+      deadline_.expires_from_now( boost::posix_time::seconds( 1 ));
+      deadline_.async_wait( boost::bind( &connection::handle_largefile, this, boost::asio::placeholders::error));
+      socket_.async_read_some(boost::asio::buffer(buffer_),
+          boost::bind(&connection::handle_read, shared_from_this(),
+            boost::asio::placeholders::error,
+            boost::asio::placeholders::bytes_transferred));
+    }
     /*
     }
     else if (!result)
