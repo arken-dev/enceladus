@@ -11,7 +11,7 @@ An HTTP server using an asio in a simple single-threaded server.
 - model 2
 An HTTP server using an io_service-per-CPU design. (Many threads is better)
 
-- model 3
+- model 3 (default)
 An HTTP server using a single io_service and a thread pool calling io_service::run(). (One Thread per cpu is better)
 
 ## BUILD
