@@ -42,6 +42,7 @@ public:
   void start();
 
 private:
+  /// Handle for large file
   void handle_largefile(const boost::system::error_code& e);
 
   /// Handle completion of a read operation.
