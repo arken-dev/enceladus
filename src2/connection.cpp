@@ -42,13 +42,35 @@ void connection::start()
         boost::asio::placeholders::bytes_transferred));
 }
 
+void connection::http_handle(const char * bytes, std::size_t bytes_transfered)
+{
+  std::cout << "http_handle ...";
+  std::string result = HttpHandle::sync(bytes, bytes_transfered);
+  std::cout << "result.size " << result.size();
+  int size = 1024;
+  size_t i = 0;
+  size_t j = size;
+  while(true) {
+    std::cout << "i " << i << " j " << j << " result.size " << result.size() << std::endl;
+    if( (i + size) > result.size() ) {
+      j = result.size();
+    }
+    //std::cout << result.substr(i, j);
+    boost::asio::async_write(socket_, boost::asio::buffer(result.substr(i, j)),
+      boost::bind(&connection::handle_write, shared_from_this(),
+        boost::asio::placeholders::error));
+    if( j >= result.size() ) {
+      std::cout << "break";
+      return;
+    }
+    i += size;
+  }
+}
+
 void connection::handle_largefile(const boost::system::error_code& e)
 {
   if( (os::microtime() - microtime) > 1 ) {
-    std::string result = HttpHandle::sync(data_.c_str(), data_.size());
-    boost::asio::async_write(socket_, boost::asio::buffer(result),
-        boost::bind(&connection::handle_write, shared_from_this(),
-          boost::asio::placeholders::error));
+    http_handle(data_.c_str(), data_.size());
   }
 }
 
@@ -58,10 +80,7 @@ void connection::handle_read(const boost::system::error_code& e,
   if (!e)
   {
     if( microtime == 0 && bytes_transferred < 4096 ) {
-      std::string result = HttpHandle::sync(buffer_.data(), bytes_transferred);
-      boost::asio::async_write(socket_, boost::asio::buffer(result),
-          boost::bind(&connection::handle_write, shared_from_this(),
-            boost::asio::placeholders::error));
+      http_handle(buffer_.data(), bytes_transferred);
     } else {
       data_.append(buffer_.data(), bytes_transferred);
       microtime = os::microtime();

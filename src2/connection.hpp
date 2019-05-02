@@ -42,6 +42,9 @@ public:
   void start();
 
 private:
+  /// Http Handle
+  void http_handle(const char * bytes, std::size_t bytes_transferred);
+
   /// Handle for large file
   void handle_largefile(const boost::system::error_code& e);
 
