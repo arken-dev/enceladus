@@ -59,7 +59,7 @@ void connection::http_handle(const char * bytes, std::size_t bytes_transfered)
     if( i >= result.size() ) {
       return;
     } else {
-      os::sleep(0.000001);
+      os::sleep(0.0001);
     }
   }
 }
