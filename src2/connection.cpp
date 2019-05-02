@@ -53,17 +53,17 @@ void connection::http_handle(const char * bytes, std::size_t bytes_transfered)
   while(true) {
     std::cout << "i " << i << " j " << j << " result.size " << result.size() << std::endl;
     if( (i + size) > result.size() ) {
-      j = result.size();
+      j = i - result.size();
     }
     //std::cout << result.substr(i, j);
     boost::asio::async_write(socket_, boost::asio::buffer(result.substr(i, j)),
       boost::bind(&connection::handle_write, shared_from_this(),
         boost::asio::placeholders::error));
-    if( j >= result.size() ) {
+    i += size;
+    if( i >= result.size() ) {
       std::cout << "break";
       return;
     }
-    i += size;
   }
 }
 
