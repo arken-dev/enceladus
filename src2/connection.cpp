@@ -50,8 +50,9 @@ void connection::http_handle(const char * bytes, std::size_t bytes_transfered)
   size_t j = size;
   while(true) {
     if( (i + size) > result.size() ) {
-      j = i - result.size();
+      j = result.size() - i;
     }
+    //std::cout << "size " << result.size() << " i " << i << " j " << j << std::endl;
     boost::asio::async_write(socket_, boost::asio::buffer(result.substr(i, j)),
       boost::bind(&connection::handle_write, shared_from_this(),
         boost::asio::placeholders::error));
@@ -59,7 +60,7 @@ void connection::http_handle(const char * bytes, std::size_t bytes_transfered)
     if( i >= result.size() ) {
       return;
     } else {
-      os::sleep(0.0001);
+      os::sleep(0.00000001);
     }
   }
 }
