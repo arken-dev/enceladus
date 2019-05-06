@@ -33,7 +33,7 @@ set_property(
 
 
 if(ENCELADUS_MODEL STREQUAL "")
-  set(ENCELADUS_MODEL "model-3")
+  set(ENCELADUS_MODEL "model-2")
 endif()
 
 message("ENCELADUS CONCURRENCY MODEL.....: ${ENCELADUS_MODEL}")
