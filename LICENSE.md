@@ -1,6 +1,6 @@
 -------------------------------------------------------------------- 
 Copyright (c) 2003-2016 Christopher M. Kohlhoff (chris at kohlhoff dot com)
-Copyright (c) 2019 Charon Platform Team All rights reserved.
+Copyright (c) 2019 Arken Platform Team All rights reserved.
 -------------------------------------------------------------------- 
 
 Boost Software License - Version 1.0 - August 17th, 2003

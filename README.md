@@ -20,8 +20,8 @@ apt-get install libboost-all-dev
 
 - clone in package directory
 ```
-cd charonplatform
-git clone git@github.com:charonplatform/titan.git packages/enceladus
+cd arkenplatform
+git clone git@github.com:arkenplatform/titan.git packages/enceladus
 Cloning into 'packages/enceladus'...
 remote: Enumerating objects: 30, done.
 remote: Counting objects: 100% (30/30), done.
@@ -41,14 +41,14 @@ cmake ..
 make -j4 (4 is number of cores)
 
 
-CHARON BACKEND...........: qt
-CHARON BASE64............: qt
-CHARON DIGEST............: qt
-CHARON MVM CONTAINER.....: deque-stack
-CHARON OS FILESYSTEM.....: qt
-CHARON OS UUID...........: qt
-CHARON REGEX.............: qt
-CHARON UTF8..............: qt
+ARKEN BACKEND...........: qt
+ARKEN BASE64............: qt
+ARKEN DIGEST............: qt
+ARKEN MVM CONTAINER.....: deque-stack
+ARKEN OS FILESYSTEM.....: qt
+ARKEN OS UUID...........: qt
+ARKEN REGEX.............: qt
+ARKEN UTF8..............: qt
 PACKAGE: titan
 PACKAGE: callisto
 PACKAGE: enceladus
@@ -59,7 +59,7 @@ ENCELADUS CONCURRENCY MODEL.....: model-3
 --   thread
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/ariveira/projetos/charon/build
+-- Build files have been written to: /home/ariveira/projetos/arken/build
 
 Building CXX object packages/miranda/CMakeFiles/enceladus.dir/src/main.cpp.o
 Linking CXX executable ../../../bin/enceladus

@@ -14,10 +14,10 @@
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
 #include "server.hpp"
-#include <charon/base>
+#include <arken/base>
 
-using mvm    = charon::mvm;
-using Config = charon::net::Config;
+using mvm    = arken::mvm;
+using Config = arken::net::Config;
 
 int main(int argc, char* argv[])
 {

@@ -1,6 +1,6 @@
 # ------------------------------------------------------------------------------
 #
-# Copyright 2016 The Charon Platform Authors.
+# Copyright 2016 The Arken Platform Authors.
 #
 # All rights reserved.
 # Use of this source code is governed by a BSD-style
@@ -30,7 +30,6 @@ set_property(
   CACHE ENCELADUS_MODEL PROPERTY STRINGS
   "" model-1 model-2 model-3
 )
-
 
 if(ENCELADUS_MODEL STREQUAL "")
   set(ENCELADUS_MODEL "model-2")
@@ -62,10 +61,12 @@ find_package(Boost COMPONENTS system thread)
 find_package(Threads REQUIRED)
 find_package(Qt5Core)
 find_package(Qt5Network)
+find_package(Qt5Widgets)
+find_package(Qt5Gui)
 
 # if using boost
 SET(Boost_USE_MULTITHREADED ON)
 
-target_link_libraries( enceladus lua charon curl json )
+target_link_libraries( enceladus lua arken curl json )
 target_link_libraries( enceladus Qt5::Core Qt5::Network )
 TARGET_LINK_LIBRARIES( enceladus pthread m ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})
