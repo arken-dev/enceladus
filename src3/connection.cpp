@@ -14,6 +14,7 @@
 #include <boost/bind.hpp>
 #include "request_handler.hpp"
 #include <arken/base>
+#include <arken/net/httphandle.h>
 
 using arken::net::HttpHandle;
 

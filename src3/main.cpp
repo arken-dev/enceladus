@@ -15,6 +15,8 @@
 #include <boost/lexical_cast.hpp>
 #include "server.hpp"
 #include <arken/base>
+#include <arken/mvm>
+#include <arken/net/config.h>
 
 using mvm    = arken::mvm;
 using Config = arken::net::Config;
