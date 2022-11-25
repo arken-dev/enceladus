@@ -11,12 +11,13 @@
 #include <iostream>
 #include <string>
 #include <boost/asio.hpp>
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include "server.hpp"
 #include <arken/base>
+#include <arken/mvm.h>
 
 using mvm    = arken::mvm;
-using Config = arken::net::Config;
+//using Config = arken::net::Config;
 
 int main(int argc, char* argv[])
 {
@@ -36,11 +37,14 @@ int main(int argc, char* argv[])
     }
     */
 
-    Config c("config/enceladus.json");
-    std::cout << "start enceladus " << c.address() << ":" << c.port() <<
-      " (" << c.threads() << ") threads..." << std::endl;
+    //Config c("config/enceladus.json");
+    //std::cout << "start enceladus " << c.address() << ":" << c.port() <<
+    //  " (" << c.threads() << ") threads..." << std::endl;
     // Initialise the server.
-    http::server::server s(c.address(), std::to_string(c.port()), "public");
+    //http::server::server s(c.address(), std::to_string(c.port()), "public");
+    std::string host("127.0.0.1");
+    std::string port("2345");
+    http::server::server s(host, port, "public");
 
     // Run the server until stopped.
     s.run();

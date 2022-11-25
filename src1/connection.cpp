@@ -10,12 +10,13 @@
 
 #include "connection.hpp"
 #include <vector>
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include "connection_manager.hpp"
 #include "request_handler.hpp"
 #include <arken/base>
+#include <arken/net/httpserver.h>
 
-using arken::net::HttpHandle;
+using arken::net::HttpServer;
 
 namespace http {
 namespace server {
@@ -46,7 +47,7 @@ void connection::start()
 void connection::handle_largefile(const boost::system::error_code& e)
 {
   if( (os::microtime() - microtime) > 1 ) {
-    std::string result = HttpHandle::sync(data_.c_str(), data_.size());
+    std::string result = HttpServer::handler(data_.c_str(), data_.size());
     boost::asio::async_write(socket_, boost::asio::buffer(result),
         boost::bind(&connection::handle_write, shared_from_this(),
           boost::asio::placeholders::error));
@@ -74,7 +75,7 @@ void connection::handle_read(const boost::system::error_code& e,
       request_handler_.handle_request(request_, reply_);
 */
     if( microtime == 0 && bytes_transferred < 4096 ) {
-      std::string result = HttpHandle::sync(buffer_.data(), bytes_transferred);
+      std::string result = HttpServer::handler(buffer_.data(), bytes_transferred);
       boost::asio::async_write(socket_, boost::asio::buffer(result),
           boost::bind(&connection::handle_write, shared_from_this(),
             boost::asio::placeholders::error));
