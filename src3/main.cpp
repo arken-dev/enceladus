@@ -11,15 +11,15 @@
 #include <iostream>
 #include <string>
 #include <boost/asio.hpp>
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/lexical_cast.hpp>
 #include "server.hpp"
 #include <arken/base>
-#include <arken/mvm>
-#include <arken/net/config.h>
+#include <arken/mvm.h>
+//#include <arken/net/config.h>
 
 using mvm    = arken::mvm;
-using Config = arken::net::Config;
+//using Config = arken::net::Config;
 
 int main(int argc, char* argv[])
 {
@@ -40,11 +40,14 @@ int main(int argc, char* argv[])
     */
 
     // Initialise the server.
-    Config c("config/enceladus.json");
-    std::cout << "start enceladus " << c.address() << ":" << c.port() <<
-      " (" << c.threads() << ") threads..." << std::endl;
+    //Config c("config/enceladus.json");
+    //std::cout << "start enceladus " << c.address() << ":" << c.port() <<
+    //  " (" << c.threads() << ") threads..." << std::endl;
 
-    http::server3::server s(c.address(), std::to_string(c.port()), "public", c.threads());
+    //http::server3::server s(c.address(), std::to_string(c.port()), "public", c.threads());
+    std::string host("127.0.0.1");
+    std::string port("2345");
+    http::server3::server s(host, port, "public", 25);
 
     // Run the server until stopped.
     s.run();
