@@ -9,7 +9,7 @@
 //
 
 #include "server.hpp"
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 
 namespace http {
 namespace server2 {
@@ -33,7 +33,7 @@ server::server(const std::string& address, const std::string& port,
   signals_.async_wait(boost::bind(&server::handle_stop, this));
 
   // Open the acceptor with the option to reuse the address (i.e. SO_REUSEADDR).
-  boost::asio::ip::tcp::resolver resolver(acceptor_.get_io_service());
+  boost::asio::ip::tcp::resolver resolver(acceptor_.get_executor());
   boost::asio::ip::tcp::resolver::query query(address, port);
   boost::asio::ip::tcp::endpoint endpoint = *resolver.resolve(query);
   acceptor_.open(endpoint.protocol());

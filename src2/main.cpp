@@ -11,15 +11,16 @@
 #include <iostream>
 #include <string>
 #include <boost/asio.hpp>
-#include <boost/bind.hpp>
+//#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/lexical_cast.hpp>
 #include "server.hpp"
 #include <arken/base>
-#include <arken/mvm>
-#include <arken/net/config.h>
+#include <arken/mvm.h>
+//#include <arken/net/config.h>
 
 using mvm    = arken::mvm;
-using Config = arken::net::Config;
+//using Config = arken::net::Config;
 
 int main(int argc, char* argv[])
 {
@@ -44,11 +45,16 @@ int main(int argc, char* argv[])
     //std::size_t num_threads = boost::lexical_cast<std::size_t>(argv[3]);
     //http::server2::server s(argv[1], argv[2], argv[4], num_threads);
 
-    Config c("config/enceladus.json");
-    std::cout << "start enceladus " << c.address() << ":" << c.port() <<
-      " (" << c.threads() << ") threads..." << std::endl;
+    //Config c("config/enceladus.json");
+    //std::cout << "start enceladus " << c.address() << ":" << c.port() <<
+    //  " (" << c.threads() << ") threads..." << std::endl;
 
-    http::server2::server s(c.address(), std::to_string(c.port()), "public", c.threads());
+    //http::server2::server s(c.address(), std::to_string(c.port()), "public", c.threads());
+
+    std::string host("127.0.0.1");
+    std::string port("2345");
+    http::server2::server s(host, port, "public", 25);
+
 
     // Run the server until stopped.
     s.run();
