@@ -85,7 +85,6 @@ SET(Boost_USE_MULTITHREADED ON)
 target_link_libraries(
   arken.net.HttpServer.enceladus
   arken
-  lua
   pthread
   m
   ${CMAKE_THREAD_LIBS_INIT}
