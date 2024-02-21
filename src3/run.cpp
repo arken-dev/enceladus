@@ -17,7 +17,7 @@ using arken::mvm;
 
 void HttpServer::run()
 {
-  std::cout << "start arken.net.HttpServer (enceladus) " << m_address <<
+  std::cout << "start arken.net.HttpServer (enceladus model 3) " << m_address <<
     ":" << m_port << " (" << m_threads << ") threads... BOOST_VERSION " << BOOST_VERSION << std::endl;
 
   try
