@@ -42,7 +42,7 @@ void HttpServer::run()
     //http::server::server s(c.address(), std::to_string(c.port()), "public");
     std::string host(m_address);
     std::string port(std::to_string(m_port));
-    http::server::server s(host, port, "public", m_threads);
+    http::server::server s(host, port, "public");
 
     // Run the server until stopped.
     s.run();
