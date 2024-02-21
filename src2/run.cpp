@@ -7,8 +7,8 @@
 #include <arken/mvm.h>
 #include <arken/net/httpserver.h>
 
-using HttpServer = arken::net::HttpServer;
-using mvm    = arken::mvm;
+using arken::net::HttpServer;
+using arken::mvm;
 
 
 //-----------------------------------------------------------------------------
@@ -40,7 +40,7 @@ void HttpServer::run()
     //  " (" << c.threads() << ") threads..." << std::endl;
     // Initialise the server.
     //http::server::server s(c.address(), std::to_string(c.port()), "public");
-    std::string host(m_address.data());
+    std::string host(m_address);
     std::string port(std::to_string(m_port));
     http::server2::server s(host, port, "public", m_threads);
 
