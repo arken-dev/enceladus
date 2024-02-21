@@ -71,10 +71,6 @@ set_target_properties(arken.net.HttpServer.enceladus PROPERTIES PREFIX "" OUTPUT
 
 find_package(Boost COMPONENTS system thread)
 find_package(Threads REQUIRED)
-find_package(Qt5Core)
-find_package(Qt5Network)
-find_package(Qt5Widgets)
-find_package(Qt5Gui)
 
 # if using boost
 SET(Boost_USE_MULTITHREADED ON)
@@ -90,5 +86,3 @@ target_link_libraries(
   ${CMAKE_THREAD_LIBS_INIT}
   ${Boost_LIBRARIES}
 )
-
-
