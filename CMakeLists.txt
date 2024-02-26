@@ -15,6 +15,8 @@ include_directories(${PROJECT_SOURCE_DIR}/src/lua/json)
 
 link_directories( ${PROJECT_SOURCE_DIR}/deps )
 
+set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/clib/arken/net/HttpServer)
+
 set(CXX_FLAGS
     -g
     -Wall
@@ -52,21 +54,35 @@ endif()
 
 file(GLOB src ${ENCELADUS_MODEL}/*.cpp)
 
-add_executable(
-    enceladus
-    ${src}
+#add_executable(
+#    enceladus
+#    ${PROJECT_SOURCE_DIR}/src/arken/net/httpserver/httpserver.cpp
+#    ${src}
+#)
+
+add_library(
+  arken.net.HttpServer.enceladus SHARED
+  ${PROJECT_SOURCE_DIR}/src/arken/net/httpserver/httpserver.cpp
+  ${src}
 )
+
+set_target_properties(arken.net.HttpServer.enceladus PROPERTIES PREFIX "" OUTPUT_NAME enceladus)
+
 
 find_package(Boost COMPONENTS system thread)
 find_package(Threads REQUIRED)
-find_package(Qt5Core)
-find_package(Qt5Network)
-find_package(Qt5Widgets)
-find_package(Qt5Gui)
 
 # if using boost
 SET(Boost_USE_MULTITHREADED ON)
 
-target_link_libraries( enceladus lua arken curl json )
-target_link_libraries( enceladus Qt5::Core Qt5::Network )
-TARGET_LINK_LIBRARIES( enceladus pthread m ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})
+#target_link_libraries( enceladus lua arken curl json )
+#target_link_libraries( enceladus Qt5::Core Qt5::Network )
+#TARGET_LINK_LIBRARIES( enceladus pthread m ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})
+target_link_libraries(
+  arken.net.HttpServer.enceladus
+  arken
+  pthread
+  m
+  ${CMAKE_THREAD_LIBS_INIT}
+  ${Boost_LIBRARIES}
+)
